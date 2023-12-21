@@ -1,57 +1,46 @@
 use anyhow::Result;
-use cairo_args_runner::utils::compile::ScarbProjectCompiler;
-use cairo_args_runner::utils::generate::{Generator, ScarbProjectGenerator};
-use cairo_args_runner::utils::logger::{LoggerCompiler, LoggerGenerator, LoggerParser};
-use cairo_args_runner::utils::parse::SierraParser;
-use cairo_args_runner::utils::run::SierraRunner;
-use cairo_felt::Felt252;
-use cairo_lang_runner::Arg as CairoRunnerArg;
+use cairo_args_runner::utils::{
+    args::WrappedArgs,
+    compile::ScarbProjectCompiler,
+    generate::{Generator, ScarbProjectGenerator},
+    logger::{LoggerCompiler, LoggerGenerator, LoggerParser},
+    parse::SierraParser,
+    run::SierraRunner,
+};
 use clap::Parser;
+use serde::Deserialize;
+use std::fs::File;
+use std::io::BufReader;
 
-/// Simple program to greet a person
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Path to the folder of the Scarb project
-    #[arg(long)]
+    /// Path to the input json file
+    #[arg(long, short)]
+    file: String,
+}
+
+#[derive(Deserialize)]
+struct Config {
     folder: String,
-
-    /// Package name of the Scarb project
-    #[arg(long)]
     package: String,
-
-    /// Function to run
-    #[arg(long)]
     function: String,
-
-    /// Numeric arguments to pass to the function
-    #[arg(long, use_value_delimiter = true)]
-    values: Vec<u128>,
+    args: WrappedArgs,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
+    let file = File::open(args.file)?;
+    let reader = BufReader::new(file);
+    let config: Config = serde_json::from_reader(reader)?;
 
-    let generator = LoggerGenerator::new(Generator::new(args.folder, args.package));
+    let generator = LoggerGenerator::new(Generator::new(config.folder, config.package));
     let compiler = LoggerCompiler::new(generator.generate()?);
     let parser = LoggerParser::new(compiler.compile()?);
     let runner = parser.parse()?;
 
-    // let arguments = args
-    //     .values
-    //     .into_iter()
-    //     .map(|num| CairoRunnerArg::Value(Felt252::new(num)))
-    //     .collect::<Vec<_>>();
-
-    let arguments = vec![CairoRunnerArg::Array(
-        args.values
-            .into_iter()
-            .map(Felt252::new)
-            .collect::<Vec<Felt252>>(),
-    )];
-
     let result = runner
-        .run(format!("::{}", args.function).as_str(), &arguments)
+        .run(format!("::{}", config.function).as_str(), &config.args)
         .unwrap();
     println!("Result: {:?}", result);
     Ok(())

@@ -8,39 +8,50 @@ use cairo_args_runner::utils::{
     run::SierraRunner,
 };
 use clap::Parser;
-use serde::Deserialize;
-use std::fs::File;
-use std::io::BufReader;
+use std::path::Path;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Path to the input json file
+    /// Path to Scarb workspace
     #[arg(long, short)]
-    file: String,
-}
+    target: String,
 
-#[derive(Deserialize)]
-struct Config {
-    folder: String,
-    package: String,
-    function: String,
-    args: WrappedArgs,
+    /// Package name
+    #[arg(long, short)]
+    package: Option<String>,
+
+    /// Function name
+    #[arg(long, short)]
+    function: Option<String>,
+
+    /// Serialized arguments
+    #[arg(long, short)]
+    args: String,
 }
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    let file = File::open(args.file)?;
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader)?;
 
-    let generator = LoggerGenerator::new(Generator::new(config.folder, config.package));
+    let target = args.target;
+    let package = args.package.unwrap_or_else(|| {
+        Path::new(&target)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
+    });
+    let function = args.function.unwrap_or_else(|| "main".to_string());
+    let args: WrappedArgs = serde_json::from_str(&args.args).unwrap();
+
+    let generator = LoggerGenerator::new(Generator::new(target, package));
     let compiler = LoggerCompiler::new(generator.generate()?);
     let parser = LoggerParser::new(compiler.compile()?);
     let runner = parser.parse()?;
 
     let result = runner
-        .run(format!("::{}", config.function).as_str(), &config.args)
+        .run(format!("::{}", function).as_str(), &args)
         .unwrap();
     println!("Result: {:?}", result);
     Ok(())

@@ -34,6 +34,8 @@ fn main() -> Result<()> {
     let reader = BufReader::new(file);
     let config: Config = serde_json::from_reader(reader)?;
 
+    println!("args: {:?}", config.args);
+
     let generator = LoggerGenerator::new(Generator::new(config.folder, config.package));
     let compiler = LoggerCompiler::new(generator.generate()?);
     let parser = LoggerParser::new(compiler.compile()?);

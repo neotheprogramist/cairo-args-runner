@@ -25,7 +25,7 @@ struct Args {
     function: String,
 
     /// Numeric arguments to pass to the function
-    #[arg(long)]
+    #[arg(long, use_value_delimiter = true)]
     values: Vec<u128>,
 }
 
@@ -37,11 +37,18 @@ fn main() -> Result<()> {
     let parser = LoggerParser::new(compiler.compile()?);
     let runner = parser.parse()?;
 
-    let arguments = args
-        .values
-        .into_iter()
-        .map(|num| CairoRunnerArg::Value(Felt252::new(num)))
-        .collect::<Vec<_>>();
+    // let arguments = args
+    //     .values
+    //     .into_iter()
+    //     .map(|num| CairoRunnerArg::Value(Felt252::new(num)))
+    //     .collect::<Vec<_>>();
+
+    let arguments = vec![CairoRunnerArg::Array(
+        args.values
+            .into_iter()
+            .map(Felt252::new)
+            .collect::<Vec<Felt252>>(),
+    )];
 
     let result = runner
         .run(format!("::{}", args.function).as_str(), &arguments)

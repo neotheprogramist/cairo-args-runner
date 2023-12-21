@@ -1,12 +1,12 @@
 # Cairo Args Runner
 
-Cairo Args Runner is a utility that enables you to execute Cairo 1 programs with arguments from the command line.
+**Cairo Args Runner** is a utility designed to execute Cairo 1 programs with arguments directly from the command line. This tool simplifies the process of running Cairo programs by allowing you to specify arguments in a JSON file.
 
 ## Usage
 
-To use Cairo Args Runner, you'll need to specify the folder, package, and function you wish to run, along with any values you want to pass as arguments.
+To use **Cairo Args Runner**, you need to create a JSON file that contains the configuration and arguments for the Cairo function you want to run.
 
-For example, to run a function named `main` in the `fib` package located in the `examples/fib` folder, and pass `5` as an argument, you would use the following command:
+For example, let's say you have a JSON file named `input.json` with your configuration and arguments. You can run your Cairo function with these arguments using the following command:
 
 ```bash
-cargo run --release -- --folder examples/fib --package fib --function main --values 5
+cargo run --release -- -f input.json

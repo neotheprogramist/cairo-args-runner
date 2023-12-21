@@ -1,12 +1,12 @@
 fn main(
-    x: felt252, y: felt252, z: felt252, a: Array<felt252>, b: Array<felt252>
-) -> (felt252, felt252, felt252) {
-    complex(x, y, z, a, b)
+    a: Array<felt252>, b: Array<felt252>
+) -> (felt252, felt252) {
+    complex(a, b)
 }
 
 fn complex(
-    x: felt252, y: felt252, z: felt252, a: Array<felt252>, b: Array<felt252>
-) -> (felt252, felt252, felt252) {
+    a: Array<felt252>, b: Array<felt252>
+) -> (felt252, felt252) {
     let mut sum = 0_felt252;
     let mut i: u32 = 0;
     loop {
@@ -26,7 +26,7 @@ fn complex(
         i += 1;
     };
     let mut i: u32 = 0;
-    (x * y - z, sum, sum2)
+    (sum, sum2)
 }
 
 #[cfg(test)]
@@ -35,6 +35,6 @@ mod tests {
 
     #[test]
     fn it_works() {
-        assert(complex(10, 2, 20, array![1, 2, 4, 8, 16], array![]) == (0, 31, 0), 'it works!');
+        assert(complex(array![1, 2, 4, 8, 16], array![]) == (31, 0), 'it works!');
     }
 }

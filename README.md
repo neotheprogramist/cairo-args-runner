@@ -2,6 +2,15 @@
 
 **Cairo Args Runner** is a utility designed to execute Cairo 1 programs with arguments directly from the command line. This tool simplifies the process of running Cairo programs by allowing you to specify arguments directly in the command line.
 
+## Configuration
+
+Make sure your `Scarb.toml` file includes the following section:
+
+```toml
+[lib]
+sierra-text = true
+```
+
 ## Usage
 
 To use **Cairo Args Runner**, you need to specify the target directory and the arguments for the Cairo function you want to run.
@@ -10,3 +19,4 @@ For example, to run a `main` function in the `complex` package located in the `e
 
 ```bash
 cargo run --release -- -t examples/complex -a "[10, 2, 20, [1, 2, 4, 8, 16]]"
+```

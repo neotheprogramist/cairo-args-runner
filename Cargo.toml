@@ -15,5 +15,6 @@ cairo-lang-sierra = "2.4.0"
 cairo-lang-sierra-generator = "2.4.0"
 cairo-lang-starknet = "2.4.0"
 cairo-lang-utils = { version = "2.4.0" }
+clap = { version = "4.4.11", features = ["derive"] }
 scarb = { git = "https://github.com/software-mansion/scarb.git", tag = "v2.4.0" }
 termcolor = "1.4.0"

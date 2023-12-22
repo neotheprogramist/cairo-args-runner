@@ -43,7 +43,7 @@ fn main() -> Result<()> {
             .to_string()
     });
     let function = cli.function.unwrap_or_else(|| "main".to_string());
-    let cli: WrappedArgs = serde_json::from_str(&program_input).unwrap();
+    let args: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
     let generator = LoggerGenerator::new(Generator::new(target, package));
     let compiler = LoggerCompiler::new(generator.generate()?);
@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     let runner = parser.parse()?;
 
     let result = runner
-        .run(format!("::{}", function).as_str(), &cli)
+        .run(format!("::{}", function).as_str(), &args)
         .unwrap();
     println!("Result: {:?}", result);
     Ok(())

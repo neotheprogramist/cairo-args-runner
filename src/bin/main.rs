@@ -1,58 +1,44 @@
 use anyhow::Result;
-use cairo_args_runner::utils::compile::ScarbProjectCompiler;
-use cairo_args_runner::utils::generate::{Generator, ScarbProjectGenerator};
-use cairo_args_runner::utils::logger::{LoggerCompiler, LoggerGenerator, LoggerParser};
-use cairo_args_runner::utils::parse::SierraParser;
-use cairo_args_runner::utils::run::SierraRunner;
-use cairo_felt::Felt252;
-use cairo_lang_runner::Arg as CairoRunnerArg;
+use cairo_args_runner::utils::args::WrappedArgs;
 use clap::Parser;
+use std::{
+    io::{self, Read},
+    path::Path,
+};
 
-/// Simple program to greet a person
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-struct Args {
-    /// Path to the folder of the Scarb project
-    #[arg(long)]
-    folder: String,
+struct Cli {
+    /// Path to Scarb workspace
+    target: String,
 
-    /// Package name of the Scarb project
-    #[arg(long)]
-    package: String,
+    /// Package name
+    #[arg(long, short)]
+    package: Option<String>,
 
-    /// Function to run
-    #[arg(long)]
-    function: String,
-
-    /// Numeric arguments to pass to the function
-    #[arg(long, use_value_delimiter = true)]
-    values: Vec<u128>,
+    /// Function name
+    #[arg(long, short)]
+    function: Option<String>,
 }
 
 fn main() -> Result<()> {
-    let args = Args::parse();
+    let cli = Cli::parse();
+    let mut program_input = String::new();
+    io::stdin().read_to_string(&mut program_input)?;
 
-    let generator = LoggerGenerator::new(Generator::new(args.folder, args.package));
-    let compiler = LoggerCompiler::new(generator.generate()?);
-    let parser = LoggerParser::new(compiler.compile()?);
-    let runner = parser.parse()?;
+    let target = cli.target;
+    let package = cli.package.unwrap_or_else(|| {
+        Path::new(&target)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
+    });
+    let function = cli.function.unwrap_or_else(|| "main".to_string());
+    let args: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
-    // let arguments = args
-    //     .values
-    //     .into_iter()
-    //     .map(|num| CairoRunnerArg::Value(Felt252::new(num)))
-    //     .collect::<Vec<_>>();
-
-    let arguments = vec![CairoRunnerArg::Array(
-        args.values
-            .into_iter()
-            .map(Felt252::new)
-            .collect::<Vec<Felt252>>(),
-    )];
-
-    let result = runner
-        .run(format!("::{}", args.function).as_str(), &arguments)
-        .unwrap();
+    let result = cairo_args_runner::run(&target, &package, &function, &args)?;
     println!("Result: {:?}", result);
     Ok(())
 }

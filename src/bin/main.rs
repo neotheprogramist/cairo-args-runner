@@ -8,13 +8,15 @@ use cairo_args_runner::utils::{
     run::SierraRunner,
 };
 use clap::Parser;
-use std::path::Path;
+use std::{
+    io::{self, Read},
+    path::Path,
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-struct Args {
+struct Cli {
     /// Path to Scarb workspace
-    #[arg(long, short)]
     target: String,
 
     /// Package name
@@ -24,17 +26,15 @@ struct Args {
     /// Function name
     #[arg(long, short)]
     function: Option<String>,
-
-    /// Serialized arguments
-    #[arg(long, short)]
-    args: String,
 }
 
 fn main() -> Result<()> {
-    let args = Args::parse();
+    let cli = Cli::parse();
+    let mut program_input = String::new();
+    io::stdin().read_to_string(&mut program_input)?;
 
-    let target = args.target;
-    let package = args.package.unwrap_or_else(|| {
+    let target = cli.target;
+    let package = cli.package.unwrap_or_else(|| {
         Path::new(&target)
             .file_name()
             .unwrap()
@@ -42,8 +42,8 @@ fn main() -> Result<()> {
             .unwrap()
             .to_string()
     });
-    let function = args.function.unwrap_or_else(|| "main".to_string());
-    let args: WrappedArgs = serde_json::from_str(&args.args).unwrap();
+    let function = cli.function.unwrap_or_else(|| "main".to_string());
+    let cli: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
     let generator = LoggerGenerator::new(Generator::new(target, package));
     let compiler = LoggerCompiler::new(generator.generate()?);
@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     let runner = parser.parse()?;
 
     let result = runner
-        .run(format!("::{}", function).as_str(), &args)
+        .run(format!("::{}", function).as_str(), &cli)
         .unwrap();
     println!("Result: {:?}", result);
     Ok(())

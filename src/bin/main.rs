@@ -1,12 +1,5 @@
 use anyhow::Result;
-use cairo_args_runner::utils::{
-    args::WrappedArgs,
-    compile::ScarbProjectCompiler,
-    generate::{Generator, ScarbProjectGenerator},
-    logger::{LoggerCompiler, LoggerGenerator, LoggerParser},
-    parse::SierraParser,
-    run::SierraRunner,
-};
+use cairo_args_runner::utils::args::WrappedArgs;
 use clap::Parser;
 use std::{
     io::{self, Read},
@@ -45,14 +38,7 @@ fn main() -> Result<()> {
     let function = cli.function.unwrap_or_else(|| "main".to_string());
     let args: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
-    let generator = LoggerGenerator::new(Generator::new(target, package));
-    let compiler = LoggerCompiler::new(generator.generate()?);
-    let parser = LoggerParser::new(compiler.compile()?);
-    let runner = parser.parse()?;
-
-    let result = runner
-        .run(format!("::{}", function).as_str(), &args)
-        .unwrap();
+    let result = cairo_args_runner::run(&target, &package, &function, &args)?;
     println!("Result: {:?}", result);
     Ok(())
 }

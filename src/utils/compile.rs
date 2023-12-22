@@ -1,5 +1,5 @@
 use anyhow::Result;
-use scarb::core::{Config, TargetKind, PackageId};
+use scarb::core::{Config, PackageId, TargetKind};
 use scarb::ops::{self, CompileOpts};
 
 use super::parse::SingleFileParser;

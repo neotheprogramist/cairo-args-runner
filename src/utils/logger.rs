@@ -1,4 +1,7 @@
-use super::{compile::ScarbProjectCompiler, generate::ScarbProjectGenerator, parse::SierraParser, run::SierraRunner};
+use super::{
+    compile::ScarbProjectCompiler, generate::ScarbProjectGenerator, parse::SierraParser,
+    run::SierraRunner,
+};
 use anyhow::Result;
 use std::{io::Write, marker::PhantomData};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};

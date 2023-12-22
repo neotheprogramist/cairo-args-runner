@@ -1,47 +1,44 @@
 use anyhow::Result;
-use cairo_args_runner::utils::{
-    args::WrappedArgs,
-    compile::ScarbProjectCompiler,
-    generate::{Generator, ScarbProjectGenerator},
-    logger::{LoggerCompiler, LoggerGenerator, LoggerParser},
-    parse::SierraParser,
-    run::SierraRunner,
-};
+use cairo_args_runner::utils::args::WrappedArgs;
 use clap::Parser;
-use serde::Deserialize;
-use std::fs::File;
-use std::io::BufReader;
+use std::{
+    io::{self, Read},
+    path::Path,
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-struct Args {
-    /// Path to the input json file
-    #[arg(long, short)]
-    file: String,
-}
+struct Cli {
+    /// Path to Scarb workspace
+    target: String,
 
-#[derive(Deserialize)]
-struct Config {
-    folder: String,
-    package: String,
-    function: String,
-    args: WrappedArgs,
+    /// Package name
+    #[arg(long, short)]
+    package: Option<String>,
+
+    /// Function name
+    #[arg(long, short)]
+    function: Option<String>,
 }
 
 fn main() -> Result<()> {
-    let args = Args::parse();
-    let file = File::open(args.file)?;
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader)?;
+    let cli = Cli::parse();
+    let mut program_input = String::new();
+    io::stdin().read_to_string(&mut program_input)?;
 
-    let generator = LoggerGenerator::new(Generator::new(config.folder, config.package));
-    let compiler = LoggerCompiler::new(generator.generate()?);
-    let parser = LoggerParser::new(compiler.compile()?);
-    let runner = parser.parse()?;
+    let target = cli.target;
+    let package = cli.package.unwrap_or_else(|| {
+        Path::new(&target)
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string()
+    });
+    let function = cli.function.unwrap_or_else(|| "main".to_string());
+    let args: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
-    let result = runner
-        .run(format!("::{}", config.function).as_str(), &config.args)
-        .unwrap();
+    let result = cairo_args_runner::run(&target, &package, &function, &args)?;
     println!("Result: {:?}", result);
     Ok(())
 }

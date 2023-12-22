@@ -36,10 +36,10 @@ pub trait SierraRunner<T> {
     fn run_with_contracts_info(
         &self,
         name: &str,
-        arguments: &Vec<Arg>,
+        arguments: &[Arg],
         contracts_info: OrderedHashMap<Felt252, ContractInfo>,
     ) -> Result<Vec<Felt252>, SierraRunnerError>;
-    fn run(&self, name: &str, arguments: &Vec<Arg>) -> Result<Vec<Felt252>, SierraRunnerError>;
+    fn run(&self, name: &str, arguments: &[Arg]) -> Result<Vec<Felt252>, SierraRunnerError>;
 }
 
 pub struct Runner {
@@ -72,7 +72,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
     fn run_with_contracts_info(
         &self,
         name: &str,
-        arguments: &Vec<Arg>,
+        arguments: &[Arg],
         contracts_info: OrderedHashMap<Felt252, ContractInfo>,
     ) -> Result<Vec<Felt252>, SierraRunnerError> {
         let runner = match SierraCasmRunner::new(
@@ -107,7 +107,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
             }
         }
     }
-    fn run(&self, name: &str, arguments: &Vec<Arg>) -> Result<Vec<Felt252>, SierraRunnerError> {
+    fn run(&self, name: &str, arguments: &[Arg]) -> Result<Vec<Felt252>, SierraRunnerError> {
         self.run_with_contracts_info(name, arguments, OrderedHashMap::default())
     }
 }

@@ -22,7 +22,8 @@ impl WrappedArg {
     /// # Returns
     ///
     /// * `WrappedArg` - A new `WrappedArg` instance.
-    #[must_use] pub fn new(args: Vec<Arg>) -> Self {
+    #[must_use]
+    pub fn new(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }

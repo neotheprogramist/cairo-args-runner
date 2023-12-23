@@ -1,12 +1,21 @@
 use std::fs;
 
-use anyhow::{Context, Result};
 use cairo_lang_sierra::ProgramParser;
+use thiserror::Error;
 
 use crate::utils::run::Runner;
 
-pub trait SierraParser<T> {
-    fn parse(self) -> Result<T>;
+#[derive(Error, Debug)]
+pub enum ParseError {
+    #[error("Could not read file")]
+    FileReadError(#[from] std::io::Error),
+
+    #[error("Failed to parse sierra program")]
+    SierraProgramParseError(String),
+}
+
+pub trait SierraParser<T, E> {
+    fn parse(self) -> Result<T, E>;
 }
 
 pub struct SingleFileParser {
@@ -21,13 +30,12 @@ impl SingleFileParser {
     }
 }
 
-impl SierraParser<Runner> for SingleFileParser {
-    fn parse(self) -> Result<Runner> {
-        let sierra_code =
-            fs::read_to_string(self.file_name).with_context(|| "Could not read file!")?;
-        let Ok(sierra_program) = ProgramParser::new().parse(&sierra_code) else {
-            anyhow::bail!("Failed to parse sierra program.")
-        };
+impl SierraParser<Runner, ParseError> for SingleFileParser {
+    fn parse(self) -> Result<Runner, ParseError> {
+        let sierra_code = fs::read_to_string(self.file_name)?;
+        let sierra_program = ProgramParser::new()
+            .parse(&sierra_code)
+            .map_err(|err| ParseError::SierraProgramParseError(err.to_string()))?;
         Ok(Runner::new(sierra_program))
     }
 }

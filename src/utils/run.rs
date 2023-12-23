@@ -1,36 +1,10 @@
-use std::fmt;
-
 use cairo_felt::Felt252;
 use cairo_lang_runner::{Arg, SierraCasmRunner, StarknetState};
 use cairo_lang_sierra::program::Program;
 use cairo_lang_starknet::contract::ContractInfo;
 use cairo_lang_utils::ordered_hash_map::OrderedHashMap;
 
-pub enum SierraRunnerError {
-    FailedSettingUp(String),
-    FailedFindingFunction,
-    FailedRunning,
-    Panicked(Vec<Felt252>),
-}
-
-impl fmt::Display for SierraRunnerError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            SierraRunnerError::FailedSettingUp(e) => write!(f, "Failed setting up: {}", e),
-            SierraRunnerError::FailedFindingFunction => write!(f, "Failed finding function"),
-            SierraRunnerError::FailedRunning => write!(f, "Failed running"),
-            SierraRunnerError::Panicked(_) => write!(f, "Panicked"),
-        }
-    }
-}
-
-impl fmt::Debug for SierraRunnerError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(&self, f)
-    }
-}
-
-impl std::error::Error for SierraRunnerError {}
+use crate::errors::SierraRunnerError;
 
 pub trait SierraRunner<T> {
     fn run_with_contracts_info(
@@ -51,22 +25,6 @@ impl Runner {
         Self { progarm }
     }
 }
-
-#[macro_export]
-macro_rules! arg_vec {
-    ($($a:expr),*) => {
-        vec![$(Felt252::from($a)),*]
-    };
-}
-
-#[macro_export]
-macro_rules! arg_val {
-    ($a:expr) => {
-        Arg::Value(Felt252::from($a))
-    };
-}
-
-pub use arg_val;
 
 impl SierraRunner<Vec<Felt252>> for Runner {
     fn run_with_contracts_info(
@@ -96,7 +54,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
         ) {
             Ok(r) => r,
             Err(e) => {
-                println!("{:?}", e);
+                println!("{e:?}");
                 return Err(SierraRunnerError::FailedRunning);
             }
         };

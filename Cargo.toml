@@ -10,9 +10,13 @@ license-file = "LICENSE"
 name = "cairo-args-runner"
 readme = "README.md"
 repository = "https://github.com/neotheprogramist/cairo-args-runner"
-version = "0.1.0"
+version = "0.1.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "cairo-args-runner"
+path = "src/bin/main.rs"
 
 [dependencies]
 cairo-felt = "0.8.7"

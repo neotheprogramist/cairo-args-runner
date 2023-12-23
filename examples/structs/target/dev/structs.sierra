@@ -1,0 +1,28 @@
+type felt252 = felt252 [storable: true, drop: true, dup: true, zero_sized: false];
+type structs::Nested = Struct<ut@structs::Nested, felt252, felt252> [storable: true, drop: true, dup: true, zero_sized: false];
+type structs::InputData = Struct<ut@structs::InputData, felt252, felt252, felt252, structs::Nested> [storable: true, drop: true, dup: true, zero_sized: false];
+
+libfunc store_temp<structs::InputData> = store_temp<structs::InputData>;
+libfunc function_call<user@structs::f> = function_call<user@structs::f>;
+libfunc struct_deconstruct<structs::InputData> = struct_deconstruct<structs::InputData>;
+libfunc felt252_add = felt252_add;
+libfunc store_temp<felt252> = store_temp<felt252>;
+libfunc struct_deconstruct<structs::Nested> = struct_deconstruct<structs::Nested>;
+
+store_temp<structs::InputData>([0]) -> ([0]); // 0
+function_call<user@structs::f>([0]) -> ([1]); // 1
+return([1]); // 2
+struct_deconstruct<structs::InputData>([0]) -> ([1], [2], [3], [4]); // 3
+felt252_add([1], [2]) -> ([5]); // 4
+store_temp<felt252>([5]) -> ([5]); // 5
+felt252_add([5], [3]) -> ([6]); // 6
+struct_deconstruct<structs::Nested>([4]) -> ([7], [8]); // 7
+store_temp<felt252>([6]) -> ([6]); // 8
+felt252_add([6], [7]) -> ([9]); // 9
+store_temp<felt252>([9]) -> ([9]); // 10
+felt252_add([9], [8]) -> ([10]); // 11
+store_temp<felt252>([10]) -> ([10]); // 12
+return([10]); // 13
+
+structs::main@0([0]: structs::InputData) -> (felt252);
+structs::f@3([0]: structs::InputData) -> (felt252);

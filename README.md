@@ -18,19 +18,27 @@ To use **Cairo Args Runner**, you need to specify the target directory and the a
 For example, to run a `main` function in the `complex` package located in the `examples/complex` folder, and pass `[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]` as an argument, you would use the following command:
 
 ```bash
-echo "[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]" | cargo run --release -- examples/complex
+cd examples/complex/
+scarb build
+echo "[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]" | cargo run --release -- examples/complex/target/dev/complex.sierra
 ```
 
 ## More examples
 
 ```bash
-echo "[10]" | cargo run --release -- examples/fib
+cd examples/fib/
+scarb build
+echo "[10]" | cargo run --release -- examples/fib/target/dev/fib.sierra
 ```
 
 ```bash
-echo "[1, 2, 3, 4, 5]" | cargo run --release -- examples/structs/
+cd examples/structs/
+scarb build
+echo "[1, 2, 3, 4, 5]" | cargo run --release -- examples/structs/target/dev/structs.sierra
 ```
 
 ```bash
-echo "[[1, 3, 9, 27]]" | cargo run --release -- examples/sum
+cd examples/sum/
+scarb build
+echo "[[1, 3, 9, 27]]" | cargo run --release -- examples/sum/target/dev/sum.sierra
 ```

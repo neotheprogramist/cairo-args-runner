@@ -18,3 +18,10 @@
 
 # vscode
 **/.vscode/
+
+# workaround to include *.sierra files into git
+!**/target/
+**/target/*
+!**/target/dev/
+**/target/dev/*
+!**/target/dev/*.sierra

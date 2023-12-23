@@ -19,8 +19,7 @@
 //! ```rust
 //! use cairo_args_runner::{run, Arg, Felt252};
 //!
-//! let target = "examples/complex";
-//! let package = "complex";
+//! let target = "examples/complex/target/dev/complex.sierra";
 //! let function = "main";
 //! let args = vec![
 //!     Arg::Array(vec![
@@ -40,7 +39,7 @@
 //!     ]),
 //! ];
 //!
-//! let result = run(target, package, function, &args);
+//! let result = run(target, function, &args);
 //! assert_eq!(
 //!     result.unwrap(),
 //!     vec![
@@ -60,12 +59,11 @@
 //! ```rust
 //! use cairo_args_runner::{run, Arg, Felt252};
 //!
-//! let target = "examples/fib";
-//! let package = "fib";
+//! let target = "examples/fib/target/dev/fib.sierra";
 //! let function = "main";
 //! let args = vec![Arg::Value(Felt252::new(10))];
 //!
-//! let result = run(target, package, function, &args);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), vec![Felt252::new(55)]);
 //! ```
 //!
@@ -74,8 +72,7 @@
 //! ```rust
 //! use cairo_args_runner::{run, Arg, Felt252};
 //!
-//! let target = "examples/structs";
-//! let package = "structs";
+//! let target = "examples/structs/target/dev/structs.sierra";
 //! let function = "main";
 //! let args = vec![
 //!     Arg::Value(Felt252::new(1)),
@@ -85,7 +82,7 @@
 //!     Arg::Value(Felt252::new(5)),
 //! ];
 //!
-//! let result = run(target, package, function, &args);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), vec![Felt252::new(15)]);
 //! ```
 //!
@@ -94,8 +91,7 @@
 //! ```rust
 //! use cairo_args_runner::{run, Arg, Felt252};
 //!
-//! let target = "examples/sum";
-//! let package = "sum";
+//! let target = "examples/sum/target/dev/sum.sierra";
 //! let function = "main";
 //! let args = vec![Arg::Array(vec![
 //!     Felt252::new(1),
@@ -104,7 +100,7 @@
 //!     Felt252::new(27),
 //! ])];
 //!
-//! let result = run(target, package, function, &args);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), vec![Felt252::new(40)]);
 //! ```
 //!
@@ -114,15 +110,10 @@
 use anyhow::Result;
 pub use cairo_felt::Felt252;
 pub use cairo_lang_runner::Arg;
+use utils::parse::SingleFileParser;
 
 pub use crate::utils::args::WrappedArgs;
-use crate::utils::{
-    compile::ScarbProjectCompiler,
-    generate::{Generator, ScarbProjectGenerator},
-    logger::{LoggerCompiler, LoggerGenerator, LoggerParser},
-    parse::SierraParser,
-    run::SierraRunner,
-};
+use crate::utils::{parse::SierraParser, run::SierraRunner};
 
 mod utils;
 
@@ -138,10 +129,8 @@ mod utils;
 /// # Returns
 ///
 /// * `Result<Vec<Felt252>>` - A Result containing a vector of `Felt252` if the function runs successfully, or an error if it fails.
-pub fn run(target: &str, package: &str, function: &str, args: &[Arg]) -> Result<Vec<Felt252>> {
-    let generator = LoggerGenerator::new(Generator::new(target, package));
-    let compiler = LoggerCompiler::new(generator.generate()?);
-    let parser = LoggerParser::new(compiler.compile()?);
+pub fn run(file_name: &str, function: &str, args: &[Arg]) -> Result<Vec<Felt252>> {
+    let parser = SingleFileParser::new(file_name);
     let runner = parser.parse()?;
 
     Ok(runner.run(format!("::{}", function).as_str(), args)?)

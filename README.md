@@ -27,6 +27,15 @@ To use **Cairo Args Runner**, you need to:
 2. Build the program using `scarb build`.
 3. Run the program with the desired arguments.
 
+## Crate Installation via Cargo
+
+You can also install this crate directly using the `cargo install` command.
+To do this, run the following command in your terminal:
+
+```bash
+cargo install cairo-args-runner
+```
+
 ### Example
 
 Run a `main` function from the `complex` package located in `examples/complex`,

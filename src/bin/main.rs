@@ -1,5 +1,5 @@
 use anyhow::Result;
-use cairo_args_runner::utils::args::WrappedArgs;
+use cairo_args_runner::{run, WrappedArgs};
 use clap::Parser;
 use std::{
     io::{self, Read},
@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     let function = cli.function.unwrap_or_else(|| "main".to_string());
     let args: WrappedArgs = serde_json::from_str(&program_input).unwrap();
 
-    let result = cairo_args_runner::run(&target, &package, &function, &args)?;
+    let result = run(&target, &package, &function, &args)?;
     println!("Result: {:?}", result);
     Ok(())
 }

@@ -14,8 +14,10 @@ pub struct SingleFileParser {
 }
 
 impl SingleFileParser {
-    pub fn new(file_name: String) -> Self {
-        SingleFileParser { file_name }
+    pub fn new(file_name: &str) -> Self {
+        SingleFileParser {
+            file_name: file_name.into(),
+        }
     }
 }
 

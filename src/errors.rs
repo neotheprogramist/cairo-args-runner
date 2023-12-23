@@ -1,7 +1,7 @@
 use cairo_felt::Felt252;
 use thiserror::Error;
 
-use crate::utils::parse::ParseError;
+use crate::utils::parse::SierraParseError;
 
 #[derive(Error, Debug)]
 pub enum SierraRunnerError {
@@ -18,5 +18,5 @@ pub enum SierraRunnerError {
     Panicked(Vec<Felt252>),
 
     #[error("Failed to parse arguments: {0}")]
-    ParseError(#[from] ParseError),
+    ParseError(#[from] SierraParseError),
 }

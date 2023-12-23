@@ -6,7 +6,7 @@ use thiserror::Error;
 use crate::utils::run::Runner;
 
 #[derive(Error, Debug)]
-pub enum ParseError {
+pub enum SierraParseError {
     #[error("Could not read file")]
     FileReadError(#[from] std::io::Error),
 
@@ -30,12 +30,12 @@ impl SingleFileParser {
     }
 }
 
-impl SierraParser<Runner, ParseError> for SingleFileParser {
-    fn parse(self) -> Result<Runner, ParseError> {
+impl SierraParser<Runner, SierraParseError> for SingleFileParser {
+    fn parse(self) -> Result<Runner, SierraParseError> {
         let sierra_code = fs::read_to_string(self.file_name)?;
         let sierra_program = ProgramParser::new()
             .parse(&sierra_code)
-            .map_err(|err| ParseError::SierraProgramParseError(err.to_string()))?;
+            .map_err(|err| SierraParseError::SierraProgramParseError(err.to_string()))?;
         Ok(Runner::new(sierra_program))
     }
 }

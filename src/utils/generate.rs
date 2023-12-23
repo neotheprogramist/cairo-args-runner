@@ -1,5 +1,6 @@
-use super::compile::ProjectCompiler;
 use anyhow::Result;
+
+use crate::utils::compile::ProjectCompiler;
 
 pub trait ScarbProjectGenerator<T> {
     fn generate(self) -> Result<T>;

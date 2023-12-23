@@ -1,27 +1,45 @@
+use std::ops::Deref;
+
 use cairo_felt::Felt252;
 use cairo_lang_runner::Arg;
 use serde::{de::Visitor, Deserialize};
 use serde_json::Value;
-use std::ops::Deref;
 
+/// `WrappedArgs` is a wrapper around a vector of `Arg`.
+///
+/// It provides convenience methods for working with a vector of `Arg` and implements
+/// `Deref` to allow it to be treated like a vector of `Arg`.
 #[derive(Debug)]
 pub struct WrappedArgs(Vec<Arg>);
+
 impl WrappedArgs {
+    /// Creates a new `WrappedArgs` from a vector of `Arg`.
+    ///
+    /// # Arguments
+    ///
+    /// * `args` - A vector of `Arg`.
+    ///
+    /// # Returns
+    ///
+    /// * `WrappedArgs` - A new `WrappedArgs` instance.
     pub fn new(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }
+
 impl Deref for WrappedArgs {
     type Target = Vec<Arg>;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
+
 impl From<WrappedArgs> for Vec<Arg> {
     fn from(args: WrappedArgs) -> Self {
         args.0
     }
 }
+
 impl From<Vec<Arg>> for WrappedArgs {
     fn from(args: Vec<Arg>) -> Self {
         Self(args)
@@ -57,6 +75,7 @@ impl<'de> Visitor<'de> for WrappedArgs {
         Ok(WrappedArgs::new(args))
     }
 }
+
 impl<'de> Deserialize<'de> for WrappedArgs {
     fn deserialize<D>(deserializer: D) -> Result<WrappedArgs, D::Error>
     where

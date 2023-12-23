@@ -2,7 +2,7 @@ use anyhow::Result;
 use scarb::core::{Config, PackageId, TargetKind};
 use scarb::ops::{self, CompileOpts};
 
-use super::parse::SingleFileParser;
+use crate::utils::parse::SingleFileParser;
 
 pub trait ScarbProjectCompiler<T> {
     fn compile(self) -> Result<T>;

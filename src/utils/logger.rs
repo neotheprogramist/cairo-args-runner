@@ -1,20 +1,24 @@
-use super::{
-    compile::ScarbProjectCompiler, generate::ScarbProjectGenerator, parse::SierraParser,
-    run::SierraRunner,
-};
 use anyhow::Result;
 use std::{io::Write, marker::PhantomData};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
+use crate::utils::{
+    compile::ScarbProjectCompiler, generate::ScarbProjectGenerator, parse::SierraParser,
+    run::SierraRunner,
+};
+
 pub struct LoggerGenerator<T, U>(pub T, PhantomData<U>)
 where
     T: ScarbProjectGenerator<U>;
+
 pub struct LoggerCompiler<T, U>(pub T, PhantomData<U>)
 where
     T: ScarbProjectCompiler<U>;
+
 pub struct LoggerParser<T, U>(pub T, PhantomData<U>)
 where
     T: SierraParser<U>;
+
 pub struct LoggerRunner<T, U>(pub T, String, PhantomData<U>)
 where
     T: SierraRunner<U>;

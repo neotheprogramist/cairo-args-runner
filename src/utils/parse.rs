@@ -3,7 +3,7 @@ use std::fs;
 use anyhow::{Context, Result};
 use cairo_lang_sierra::ProgramParser;
 
-use super::run::Runner;
+use crate::utils::run::Runner;
 
 pub trait SierraParser<T> {
     fn parse(self) -> Result<T>;

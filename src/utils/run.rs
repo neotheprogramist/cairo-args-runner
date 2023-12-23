@@ -16,7 +16,7 @@ pub enum SierraRunnerError {
 impl fmt::Display for SierraRunnerError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            SierraRunnerError::FailedSettingUp(e) => write!(f, "Failed setting up: {}", e),
+            SierraRunnerError::FailedSettingUp(e) => write!(f, "Failed setting up: {e}"),
             SierraRunnerError::FailedFindingFunction => write!(f, "Failed finding function"),
             SierraRunnerError::FailedRunning => write!(f, "Failed running"),
             SierraRunnerError::Panicked(_) => write!(f, "Panicked"),
@@ -96,7 +96,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
         ) {
             Ok(r) => r,
             Err(e) => {
-                println!("{:?}", e);
+                println!("{e:?}");
                 return Err(SierraRunnerError::FailedRunning);
             }
         };

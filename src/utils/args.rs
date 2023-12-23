@@ -5,15 +5,15 @@ use cairo_lang_runner::Arg;
 use serde::{de::Visitor, Deserialize};
 use serde_json::Value;
 
-/// `WrappedArgs` is a wrapper around a vector of `Arg`.
+/// `WrappedArg` is a wrapper around a vector of `Arg`.
 ///
 /// It provides convenience methods for working with a vector of `Arg` and implements
 /// `Deref` to allow it to be treated like a vector of `Arg`.
 #[derive(Debug)]
-pub struct WrappedArgs(Vec<Arg>);
+pub struct WrappedArg(Vec<Arg>);
 
-impl WrappedArgs {
-    /// Creates a new `WrappedArgs` from a vector of `Arg`.
+impl WrappedArg {
+    /// Creates a new `WrappedArg` from a vector of `Arg`.
     ///
     /// # Arguments
     ///
@@ -21,33 +21,33 @@ impl WrappedArgs {
     ///
     /// # Returns
     ///
-    /// * `WrappedArgs` - A new `WrappedArgs` instance.
-    pub fn new(args: Vec<Arg>) -> Self {
+    /// * `WrappedArg` - A new `WrappedArg` instance.
+    #[must_use] pub fn new(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }
 
-impl Deref for WrappedArgs {
+impl Deref for WrappedArg {
     type Target = Vec<Arg>;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl From<WrappedArgs> for Vec<Arg> {
-    fn from(args: WrappedArgs) -> Self {
+impl From<WrappedArg> for Vec<Arg> {
+    fn from(args: WrappedArg) -> Self {
         args.0
     }
 }
 
-impl From<Vec<Arg>> for WrappedArgs {
+impl From<Vec<Arg>> for WrappedArg {
     fn from(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }
 
-impl<'de> Visitor<'de> for WrappedArgs {
-    type Value = WrappedArgs;
+impl<'de> Visitor<'de> for WrappedArg {
+    type Value = WrappedArg;
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter.write_str("a list of arguments")
     }
@@ -67,20 +67,20 @@ impl<'de> Visitor<'de> for WrappedArgs {
                             _ => return Err(serde::de::Error::custom("Invalid type")),
                         }
                     }
-                    args.push(Arg::Array(inner_args))
+                    args.push(Arg::Array(inner_args));
                 }
                 _ => return Err(serde::de::Error::custom("Invalid type")),
             }
         }
-        Ok(WrappedArgs::new(args))
+        Ok(WrappedArg::new(args))
     }
 }
 
-impl<'de> Deserialize<'de> for WrappedArgs {
-    fn deserialize<D>(deserializer: D) -> Result<WrappedArgs, D::Error>
+impl<'de> Deserialize<'de> for WrappedArg {
+    fn deserialize<D>(deserializer: D) -> Result<WrappedArg, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
-        deserializer.deserialize_seq(WrappedArgs(Vec::new()))
+        deserializer.deserialize_seq(WrappedArg(Vec::new()))
     }
 }

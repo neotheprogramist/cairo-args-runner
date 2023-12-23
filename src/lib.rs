@@ -112,7 +112,7 @@ pub use cairo_felt::Felt252;
 pub use cairo_lang_runner::Arg;
 use utils::parse::SingleFileParser;
 
-pub use crate::utils::args::WrappedArgs;
+pub use crate::utils::args::WrappedArg;
 use crate::utils::{parse::SierraParser, run::SierraRunner};
 
 mod utils;
@@ -121,17 +121,25 @@ mod utils;
 ///
 /// # Arguments
 ///
-/// * `target` - A string slice that holds the target.
-/// * `package` - A string slice that holds the package.
+/// * `file_name` - A string slice that holds the file name.
 /// * `function` - A string slice that holds the function to run.
 /// * `args` - A slice of `Arg` that holds the arguments to the function.
 ///
 /// # Returns
 ///
 /// * `Result<Vec<Felt252>>` - A Result containing a vector of `Felt252` if the function runs successfully, or an error if it fails.
+///
+/// # Errors
+///
+/// This function will return an error if:
+///
+/// * The file specified by `file_name` cannot be found or read.
+/// * The function specified by `function` cannot be found in the file.
+/// * The arguments provided in `args` are not valid for the function.
+/// * The function execution fails for any reason.
 pub fn run(file_name: &str, function: &str, args: &[Arg]) -> Result<Vec<Felt252>> {
     let parser = SingleFileParser::new(file_name);
     let runner = parser.parse()?;
 
-    Ok(runner.run(format!("::{}", function).as_str(), args)?)
+    Ok(runner.run(format!("::{function}").as_str(), args)?)
 }

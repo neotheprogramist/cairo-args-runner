@@ -68,7 +68,7 @@ echo "[10]" | cargo run --release -- examples/fib/target/dev/fib.sierra
 ```bash
 cd examples/structs/
 scarb build
-echo "[5, 9, [1, 2, 3]]" | cargo run --release -- examples/structs/target/dev/structs.sierra
+echo "[[1, 2, 4, 8, 16, 5, 1, 2, 3, 4, 5]]" | cargo run --release -- examples/structs/target/dev/structs.sierra
 ```
 
 ### Summation Example

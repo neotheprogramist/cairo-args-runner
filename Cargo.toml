@@ -10,7 +10,7 @@ license-file = "LICENSE"
 name = "cairo-args-runner"
 readme = "README.md"
 repository = "https://github.com/neotheprogramist/cairo-args-runner"
-version = "0.1.1"
+version = "1.0.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -28,6 +28,7 @@ cairo-lang-sierra-generator = "2.4.1"
 cairo-lang-starknet = "2.4.1"
 cairo-lang-utils = { version = "2.4.1" }
 clap = { version = "4.4.11", features = ["derive"] }
+num-bigint = "0.4.4"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
 termcolor = "1.4.0"

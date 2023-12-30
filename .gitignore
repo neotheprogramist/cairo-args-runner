@@ -24,4 +24,4 @@
 **/target/*
 !**/target/dev/
 **/target/dev/*
-!**/target/dev/*.sierra
+!**/target/dev/*.sierra.json

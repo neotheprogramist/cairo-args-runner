@@ -19,7 +19,7 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/complex/target/dev/complex.sierra";
+//! let target = "examples/complex/target/dev/complex.sierra.json";
 //! let function = "main";
 //! let args = arg_array![5, 1, 2, 4, 8, 16, 6, 1, 2, 3, 4, 5, 6];
 //!
@@ -35,7 +35,7 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/fib/target/dev/fib.sierra";
+//! let target = "examples/fib/target/dev/fib.sierra.json";
 //! let function = "main";
 //! let args = arg_array![10];
 //!
@@ -48,7 +48,7 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/structs/target/dev/structs.sierra";
+//! let target = "examples/structs/target/dev/structs.sierra.json";
 //! let function = "main";
 //! let args = arg_array![1, 2, 10, 5, 9, 3, 1, 2, 3];
 //!
@@ -61,7 +61,7 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/sum/target/dev/sum.sierra";
+//! let target = "examples/sum/target/dev/sum.sierra.json";
 //! let function = "main";
 //! let args = arg_array![4, 1, 3, 9, 27];
 //!

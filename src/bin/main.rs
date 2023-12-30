@@ -1,9 +1,10 @@
 use std::io::{self, Read};
 
+use cairo_lang_runner::Arg;
 use clap::Parser;
 use thiserror::Error;
 
-use cairo_args_runner::{errors::SierraRunnerError, run, WrappedArg};
+use cairo_args_runner::{errors::SierraRunnerError, run, ArgsArray};
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -32,9 +33,11 @@ fn main() -> Result<(), AppError> {
 
     let target = cli.target;
     let function = cli.function.unwrap_or_else(|| "main".to_string());
-    let args: WrappedArg = serde_json::from_str(&program_input).unwrap();
+    let args: ArgsArray = serde_json::from_str(&program_input).unwrap();
 
-    let result = run(&target, &function, &args)?;
+    let result = run(&target, &function, &[Arg::Array(args.to_vec())])?;
+
+    println!("{args:?}");
     println!("{result:?}");
     Ok(())
 }

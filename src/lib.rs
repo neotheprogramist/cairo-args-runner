@@ -21,10 +21,10 @@
 //!
 //! let target = "examples/complex/target/dev/complex.sierra";
 //! let function = "main";
-//! let args = vec![arg_array![1, 2, 4, 8, 16], arg_array![1, 2, 3, 4, 5, 6]];
+//! let args = arg_array![5, 1, 2, 4, 8, 16, 6, 1, 2, 3, 4, 5, 6];
 //!
 //! let result = run(target, function, &args);
-//! assert_eq!(result.unwrap(), felt_vec![15, 31, 5, 6]);
+//! assert_eq!(result.unwrap(), felt_vec![31, 21, 5, 6]);
 //! ```
 //! **Note:** There is a known bug in this example related to passing arrays as arguments.
 //! For more details and updates on this issue, please visit
@@ -77,7 +77,7 @@ pub use cairo_lang_runner::Arg;
 use errors::SierraRunnerError;
 use utils::parse::SingleFileParser;
 
-pub use crate::utils::args::WrappedArg;
+pub use crate::utils::args::ArgsArray;
 use crate::utils::{parse::SierraParser, run::SierraRunner};
 
 pub mod errors;

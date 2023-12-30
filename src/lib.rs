@@ -77,7 +77,7 @@ pub use cairo_lang_runner::Arg;
 use errors::SierraRunnerError;
 use utils::parse::SingleFileParser;
 
-pub use crate::utils::args::ArgsArray;
+pub use crate::utils::args::VecFelt252;
 use crate::utils::{parse::SierraParser, run::SierraRunner};
 
 pub mod errors;

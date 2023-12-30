@@ -1,6 +1,12 @@
-use core::array::ArrayTrait;
+#[derive(Drop, Serde)]
+struct InputData {
+    a: Array<felt252>,
+}
+
 fn main(x: Array<felt252>) -> felt252 {
-    sum(x)
+    let mut x_span = x.span();
+    let deserialized_struct: InputData = Serde::deserialize(ref x_span).unwrap();
+    sum(deserialized_struct.a)
 }
 
 fn sum(x: Array<felt252>) -> felt252 {

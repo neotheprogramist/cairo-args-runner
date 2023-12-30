@@ -1,12 +1,12 @@
 use core::array::ArrayTrait;
-#[derive(Drop)]
+#[derive(Drop, Serde)]
 struct Nested {
     a: felt252,
     b: felt252,
     c: Array<felt252>,
 }
 
-#[derive(Drop)]
+#[derive(Drop, Serde)]
 struct InputData {
     a: felt252,
     b: felt252,
@@ -14,8 +14,10 @@ struct InputData {
     d: Nested,
 }
 
-fn main(x: InputData) -> felt252 {
-    f(x)
+fn main(x: Array<felt252>) -> felt252 {
+    let mut x_span = x.span();
+    let deserialized_struct: InputData = Serde::<InputData>::deserialize(ref x_span).unwrap();
+    f(deserialized_struct)
 }
 
 fn f(x: InputData) -> felt252 {

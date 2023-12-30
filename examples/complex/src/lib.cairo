@@ -15,18 +15,12 @@ fn main(x: Array<felt252>) -> (felt252, felt252, felt252, felt252) {
 }
 
 fn complex(a: Array<felt252>, b: Array<felt252>) -> (felt252, felt252, felt252, felt252) {
-    let mut sum = 0_felt252;
-    let mut i: u32 = 0;
     let a_len = a.span().len();
     let b_len = b.span().len();
-    let len = if a_len < b_len {
-        a_len
-    } else {
-        b_len
-    };
-
+    let mut sum = 0_felt252;
+    let mut i: u32 = 0;
     loop {
-        if i == len {
+        if i == a_len {
             break;
         }
         sum = sum + *a.span().at(i);
@@ -35,7 +29,7 @@ fn complex(a: Array<felt252>, b: Array<felt252>) -> (felt252, felt252, felt252, 
     let mut sum2 = 0_felt252;
     let mut i: u32 = 0;
     loop {
-        if i == len {
+        if i == b_len {
             break;
         }
         sum2 = sum2 + *b.at(i);
@@ -51,7 +45,7 @@ mod tests {
     #[test]
     fn it_works() {
         assert(
-            complex(array![1, 2, 4, 8, 16], array![1, 2, 3, 4, 5]) == (31, 15, 5, 5), 'it works!'
+            complex(array![1, 2, 4, 8, 16], array![1, 2, 3, 4, 5, 6]) == (31, 21, 5, 6), 'it works!'
         );
     }
 }

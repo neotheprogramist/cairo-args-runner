@@ -23,7 +23,7 @@
 //! let function = "main";
 //! let args = arg_array![5, 1, 2, 4, 8, 16, 6, 1, 2, 3, 4, 5, 6];
 //!
-//! let result = run(target, function, &args);
+//! let result = run(target, function, &[args]);
 //! assert_eq!(result.unwrap(), felt_vec![31, 21, 5, 6]);
 //! ```
 //! **Note:** There is a known bug in this example related to passing arrays as arguments.
@@ -33,27 +33,27 @@
 //! ### Fibonacci Sequence
 //! Calculate the 10th number in the Fibonacci sequence:
 //! ```rust
-//! use cairo_args_runner::{arg_value_vec, felt_vec, run};
+//! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
 //! let target = "examples/fib/target/dev/fib.sierra";
 //! let function = "main";
-//! let args = arg_value_vec![10];
+//! let args = arg_array![10];
 //!
-//! let result = run(target, function, &args);
+//! let result = run(target, function, &[args]);
 //! assert_eq!(result.unwrap(), felt_vec![55]);
 //! ```
 //!
 //! ### Working with Structs
 //! Execute a function that works with multiple struct arguments:
 //! ```rust
-//! use cairo_args_runner::{arg_value_vec, felt_vec, run};
+//! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
 //! let target = "examples/structs/target/dev/structs.sierra";
 //! let function = "main";
-//! let args = arg_value_vec![1, 2, 3, 4, 5];
+//! let args = arg_array![1, 2, 10, 5, 9, 3, 1, 2, 3];
 //!
-//! let result = run(target, function, &args);
-//! assert_eq!(result.unwrap(), felt_vec![15]);
+//! let result = run(target, function, &[args]);
+//! assert_eq!(result.unwrap(), felt_vec![33]);
 //! ```
 //!
 //! ### Summation Example
@@ -63,9 +63,9 @@
 //!
 //! let target = "examples/sum/target/dev/sum.sierra";
 //! let function = "main";
-//! let args = vec![arg_array![1, 3, 9, 27]];
+//! let args = arg_array![4, 1, 3, 9, 27];
 //!
-//! let result = run(target, function, &args);
+//! let result = run(target, function, &[args]);
 //! assert_eq!(result.unwrap(), felt_vec![40]);
 //! ```
 //!

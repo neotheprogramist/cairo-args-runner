@@ -44,7 +44,7 @@ passing `[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]` as the argument:
 ```bash
 cd examples/complex/
 scarb build
-echo "[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]" | cargo run --release -- examples/complex/target/dev/complex.sierra
+echo "[[3, 3], [5, 5]]" | cargo run --release -- examples/complex/target/dev/complex.sierra
 ```
 
 **Note:** There is a known bug in this example related to passing arrays as arguments.

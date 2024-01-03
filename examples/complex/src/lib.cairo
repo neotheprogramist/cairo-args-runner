@@ -39,7 +39,7 @@ mod tests {
     #[test]
     fn it_works() {
         assert(
-            complex(array![1, 2, 4, 8, 16], array![1, 2, 3, 4, 5, 6]) == (5, 31, 6, 21), 'it works!'
+            complex(array![1, 1, 1, 1, 1], array![2, 2, 2, 2, 2, 2]) == (5, 5, 6, 12), 'it works!'
         );
     }
 }

@@ -35,6 +35,7 @@ fn main() -> Result<(), AppError> {
     let args: WrappedArg = serde_json::from_str(&program_input).unwrap();
 
     let result = run(&target, &function, &args)?;
+    println!("{args:?}");
     println!("{result:?}");
     Ok(())
 }

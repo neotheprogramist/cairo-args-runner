@@ -57,4 +57,20 @@ scarb build
 echo "[1, 2, 10, 5, 9]" | cargo run --release -- examples/structs/target/dev/structs.sierra.json
 ```
 
+### Serialization1
+
+```bash
+cd examples/serialization1/
+scarb build
+echo "[1, 2, 10, 5, 0]" | cargo run --release -- examples/serialization1/target/dev/serialization1.sierra.json
+```
+
+### Serialization2
+
+```bash
+cd examples/serialization2/
+scarb build
+echo "[1, 1, 1, 1]" | cargo run --release -- examples/serialization2/target/dev/serialization2.sierra.json
+```
+
 These examples demonstrate the versatility and ease of using **Cairo Args Runner** for different types of Cairo 1 programs.

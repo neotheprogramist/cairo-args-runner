@@ -6,17 +6,6 @@
 It enhances the user experience by enabling direct argument specification in the command line,
 thus simplifying the execution of Cairo programs.
 
-## Configuration
-
-Before using **Cairo Args Runner**, ensure your `Scarb.toml` configuration file is set up as follows:
-
-```toml
-[lib]
-sierra-text = true
-```
-
-This step is crucial for the proper functioning of the utility.
-
 ## How to Use
 
 ### Basic Usage
@@ -36,47 +25,36 @@ To do this, run the following command in your terminal:
 cargo install cairo-args-runner
 ```
 
-### Example
-
-Run a `main` function from the `complex` package located in `examples/complex`,
-passing `[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]` as the argument:
-
-```bash
-cd examples/complex/
-scarb build
-echo "[[3, 3], [5, 5]]" | cargo run --release -- examples/complex/target/dev/complex.sierra
-```
-
 **Note:** There is a known bug in this example related to passing arrays as arguments.
 For more details and updates on this issue, please visit
 [Issue #7 on GitHub](https://github.com/neotheprogramist/cairo-args-runner/issues/7).
 
-## Additional Examples
+## Examples
 
-Here are more examples for running different Cairo programs:
+Here are examples for running different Cairo programs:
 
-### Fibonacci Sequence Example
+### Arrays2
 
 ```bash
-cd examples/fib/
+cd examples/arrays2/
 scarb build
-echo "[10]" | cargo run --release -- examples/fib/target/dev/fib.sierra
+echo "[[1, 1, 1], [2, 2, 2]]" | cargo run --release -- examples/arrays2/target/dev/arrays2.sierra.json
 ```
 
-### Structs Example
+### Arrays3
+
+```bash
+cd examples/arrays3/
+scarb build
+echo "[[1, 1], [2, 2], [3, 3]]" | cargo run --release -- examples/arrays3/target/dev/arrays3.sierra.json
+```
+
+### Structs
 
 ```bash
 cd examples/structs/
 scarb build
-echo "[1, 2, 3, 4, 5]" | cargo run --release -- examples/structs/target/dev/structs.sierra
-```
-
-### Summation Example
-
-```bash
-cd examples/sum/
-scarb build
-echo "[[1, 3, 9, 27]]" | cargo run --release -- examples/sum/target/dev/sum.sierra
+echo "[1, 2, 10, 5, 9]" | cargo run --release -- examples/structs/target/dev/structs.sierra.json
 ```
 
 These examples demonstrate the versatility and ease of using **Cairo Args Runner** for different types of Cairo 1 programs.

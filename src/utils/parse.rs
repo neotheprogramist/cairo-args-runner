@@ -1,6 +1,7 @@
 use std::fs;
 
-use cairo_lang_sierra::ProgramParser;
+use cairo_lang_sierra::program::VersionedProgram;
+use serde_json::Error as SerdeJsonError;
 use thiserror::Error;
 
 use crate::utils::run::Runner;
@@ -8,10 +9,13 @@ use crate::utils::run::Runner;
 #[derive(Error, Debug)]
 pub enum SierraParseError {
     #[error("Could not read file")]
-    FileReadError(#[from] std::io::Error),
+    FileRead(#[from] std::io::Error),
 
     #[error("Failed to parse sierra program")]
-    SierraProgramParseError(String),
+    SierraProgramParse(String),
+
+    #[error("Serde JSON error: {0}")]
+    SerdeJson(#[from] SerdeJsonError),
 }
 
 pub trait SierraParser<T, E> {
@@ -32,10 +36,12 @@ impl SingleFileParser {
 
 impl SierraParser<Runner, SierraParseError> for SingleFileParser {
     fn parse(self) -> Result<Runner, SierraParseError> {
-        let sierra_code = fs::read_to_string(self.file_name)?;
-        let sierra_program = ProgramParser::new()
-            .parse(&sierra_code)
-            .map_err(|err| SierraParseError::SierraProgramParseError(err.to_string()))?;
+        let file_name = self.file_name;
+        let sierra_program =
+            serde_json::from_str::<VersionedProgram>(&fs::read_to_string(file_name)?)?
+                .into_v1()
+                .map_err(|err| SierraParseError::SierraProgramParse(err.to_string()))?;
+
         Ok(Runner::new(sierra_program))
     }
 }

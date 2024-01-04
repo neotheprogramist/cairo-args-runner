@@ -1,6 +1,6 @@
 use cairo_felt::Felt252;
 use cairo_lang_runner::{Arg, SierraCasmRunner, StarknetState};
-use cairo_lang_sierra::program::Program;
+use cairo_lang_sierra::program::ProgramArtifact;
 use cairo_lang_starknet::contract::ContractInfo;
 use cairo_lang_utils::ordered_hash_map::OrderedHashMap;
 
@@ -17,12 +17,12 @@ pub trait SierraRunner<T> {
 }
 
 pub struct Runner {
-    progarm: Program,
+    program: ProgramArtifact,
 }
 
 impl Runner {
-    pub fn new(progarm: Program) -> Self {
-        Self { progarm }
+    pub fn new(program: ProgramArtifact) -> Self {
+        Self { program }
     }
 }
 
@@ -34,7 +34,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
         contracts_info: OrderedHashMap<Felt252, ContractInfo>,
     ) -> Result<Vec<Felt252>, SierraRunnerError> {
         let runner = match SierraCasmRunner::new(
-            self.progarm.clone(),
+            self.program.program.clone(),
             Some(Default::default()),
             contracts_info,
         ) {

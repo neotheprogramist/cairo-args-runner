@@ -1,6 +1,3 @@
-use core::traits::Into;
-use core::array::SpanTrait;
-use core::array::ArrayTrait;
 fn main(a: Array<felt252>, b: Array<felt252>) -> (felt252, felt252, felt252, felt252) {
     complex(a, b)
 }

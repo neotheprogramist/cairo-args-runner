@@ -8,6 +8,12 @@ thus simplifying the execution of Cairo programs.
 
 ## Examples
 
+You can run all examples with:
+
+```bash
+./run.sh
+```
+
 Here are examples for running different Cairo programs:
 
 Firstly build examples with:

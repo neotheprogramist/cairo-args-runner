@@ -37,6 +37,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
             self.program.program.clone(),
             Some(Default::default()),
             contracts_info,
+            false,
         ) {
             Ok(runner) => runner,
             Err(e) => {

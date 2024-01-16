@@ -1,0 +1,13 @@
+[workspace]
+members = [
+  "examples/e1_struct_with_values",
+  "examples/e2_arrays",
+  "examples/e3_struct_with_array",
+  "examples/e4_struct_with_arrays",
+]
+
+[workspace.package]
+authors = ["Paweł Nowak <neotheprogramist@proton.me>"]
+description = "Examples for Cairo Args Runner"
+edition = "2023_10"
+version = "0.1.1"

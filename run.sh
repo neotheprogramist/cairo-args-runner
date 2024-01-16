@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-cargo clean && \
-scarb clean && \
 cargo build --release && \
 scarb build
 
+echo "[]" | cargo run --release -- target/dev/e0_init.sierra.json
 echo "[1, 2, 3]" | cargo run --release -- target/dev/e1_struct_with_values.sierra.json
 echo "[[1, 9, 1], 7, []]" | cargo run --release -- target/dev/e2_arrays.sierra.json
 echo "[[1, 2, 3]]" | cargo run --release -- target/dev/e3_struct_with_array.sierra.json

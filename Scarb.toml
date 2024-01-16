@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "examples/e0_init",
   "examples/e1_struct_with_values",
   "examples/e2_arrays",
   "examples/e3_struct_with_array",

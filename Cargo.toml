@@ -19,7 +19,7 @@ name = "cairo-args-runner"
 path = "src/bin/main.rs"
 
 [dependencies]
-cairo-felt = "0.9.1"
+cairo-felt = "0.9"
 cairo-lang-compiler = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
 cairo-lang-diagnostics = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
 cairo-lang-runner = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
@@ -27,8 +27,8 @@ cairo-lang-sierra = { git = "https://github.com/starkware-libs/cairo", branch = 
 cairo-lang-sierra-generator = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
 cairo-lang-starknet = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
 cairo-lang-utils = { git = "https://github.com/starkware-libs/cairo", branch = "main" }
-clap = { version = "4.4.14", features = ["derive"] }
-serde = { version = "1.0.195", features = ["derive"] }
-serde_json = "1.0.111"
-termcolor = "1.4.1"
-thiserror = "1.0.56"
+clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+termcolor = "1.4"
+thiserror = "1.0"

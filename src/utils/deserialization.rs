@@ -14,6 +14,8 @@ pub enum ArgsError {
     BigIntParseError(#[from] num_bigint::ParseBigIntError),
     #[error("number out of range")]
     NumberOutOfRange,
+    #[error("failed to parse arguments: {0}")]
+    ParseError(#[from] serde_json::Error),
 }
 
 /// `Args` is a wrapper around a vector of `Arg`.
@@ -55,6 +57,14 @@ impl From<Args> for Vec<Arg> {
 impl From<Vec<Arg>> for Args {
     fn from(args: Vec<Arg>) -> Self {
         Self(args)
+    }
+}
+
+impl FromStr for Args {
+    type Err = ArgsError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let args = serde_json::from_str::<Args>(s)?;
+        Ok(args)
     }
 }
 

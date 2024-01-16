@@ -3,7 +3,7 @@ use std::io::{self, Read};
 use clap::Parser;
 use thiserror::Error;
 
-use cairo_args_runner::{errors::SierraRunnerError, run, Args};
+use cairo_args_runner::{errors::SierraRunnerError, run, Args, ArgsError};
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -12,6 +12,9 @@ pub enum AppError {
 
     #[error("run function failed")]
     RunError(#[from] SierraRunnerError),
+
+    #[error("failed to parse arguments: {0}")]
+    ParseError(#[from] ArgsError),
 }
 
 #[derive(Parser)]
@@ -32,11 +35,12 @@ fn main() -> Result<(), AppError> {
 
     let target = cli.target;
     let function = cli.function.unwrap_or_else(|| "main".to_string());
-    let args: Args = serde_json::from_str(&program_input).unwrap();
+
+    let args: Args = program_input.parse()?;
+    println!("{args:?}");
 
     let result = run(&target, &function, &args)?;
 
-    println!("{args:?}");
     println!("{result:?}");
     Ok(())
 }

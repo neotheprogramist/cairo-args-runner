@@ -73,7 +73,7 @@
 //! aiding users in understanding and utilizing the utility effectively.
 
 pub use cairo_felt::Felt252;
-pub use cairo_lang_runner::Arg;
+pub use cairo_lang_runner::{self, Arg};
 use errors::SierraRunnerError;
 use utils::parse::SingleFileParser;
 

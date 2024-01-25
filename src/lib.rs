@@ -77,7 +77,10 @@ pub use cairo_lang_runner::{self, Arg};
 use errors::SierraRunnerError;
 use utils::parse::SingleFileParser;
 
-pub use crate::utils::deserialization::{Args, ArgsError};
+pub use crate::utils::{
+    deserialization::{Args, ArgsError},
+    run::SuccessfulRun,
+};
 use crate::utils::{parse::SierraParser, run::SierraRunner};
 
 pub mod errors;
@@ -109,6 +112,43 @@ pub fn run(
     function: &str,
     args: &[Arg],
 ) -> Result<Vec<Felt252>, SierraRunnerError> {
+    let parser = SingleFileParser::new(file_name);
+    let runner = parser.parse()?;
+
+    runner
+        .run(format!("::{function}").as_str(), args)
+        .map(|r| r.value)
+}
+
+/// Runs the specified function with the provided arguments and captures the memory state.
+///
+/// This function is similar to `run` but additionally captures the memory state after the function execution.
+///
+/// # Arguments
+///
+/// * `file_name` - A string slice that holds the file name.
+/// * `function` - A string slice that holds the function to run.
+/// * `args` - A slice of `Arg` that holds the arguments to the function.
+///
+/// # Returns
+///
+/// * `Result<SuccessfulRun, SierraRunnerError>` - A Result containing a `SuccessfulRun` struct if the function runs successfully, or an error if it fails. The `SuccessfulRun` struct contains:
+///   - `value`: a vector of `Felt252`, representing the return value of the function.
+///   - `memory`: a vector of `Option<Felt252>`, representing the state of the memory after the function execution.
+///
+/// # Errors
+///
+/// This function will return an error if:
+///
+/// * The file specified by `file_name` cannot be found or read.
+/// * The function specified by `function` cannot be found in the file.
+/// * The arguments provided in `args` are not valid for the function.
+/// * The function execution fails for any reason.
+pub fn run_capture_memory(
+    file_name: &str,
+    function: &str,
+    args: &[Arg],
+) -> Result<SuccessfulRun, SierraRunnerError> {
     let parser = SingleFileParser::new(file_name);
     let runner = parser.parse()?;
 

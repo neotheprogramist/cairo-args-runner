@@ -1,10 +1,15 @@
 use cairo_felt::Felt252;
-use cairo_lang_runner::{Arg, SierraCasmRunner, StarknetState};
+use cairo_lang_runner::{Arg, RunResultStarknet, RunResultValue, SierraCasmRunner, StarknetState};
 use cairo_lang_sierra::program::ProgramArtifact;
 use cairo_lang_starknet::contract::ContractInfo;
 use cairo_lang_utils::ordered_hash_map::OrderedHashMap;
 
 use crate::errors::SierraRunnerError;
+
+pub struct SuccessfulRun {
+    pub value: Vec<Felt252>,
+    pub memory: Vec<Option<Felt252>>,
+}
 
 pub trait SierraRunner<T> {
     fn run_with_contracts_info(
@@ -12,8 +17,8 @@ pub trait SierraRunner<T> {
         name: &str,
         arguments: &[Arg],
         contracts_info: OrderedHashMap<Felt252, ContractInfo>,
-    ) -> Result<Vec<Felt252>, SierraRunnerError>;
-    fn run(&self, name: &str, arguments: &[Arg]) -> Result<Vec<Felt252>, SierraRunnerError>;
+    ) -> Result<RunResultStarknet, SierraRunnerError>;
+    fn run(&self, name: &str, arguments: &[Arg]) -> Result<SuccessfulRun, SierraRunnerError>;
 }
 
 pub struct Runner {
@@ -32,7 +37,7 @@ impl SierraRunner<Vec<Felt252>> for Runner {
         name: &str,
         arguments: &[Arg],
         contracts_info: OrderedHashMap<Felt252, ContractInfo>,
-    ) -> Result<Vec<Felt252>, SierraRunnerError> {
+    ) -> Result<RunResultStarknet, SierraRunnerError> {
         let runner = match SierraCasmRunner::new(
             self.program.program.clone(),
             Some(Default::default()),
@@ -59,14 +64,16 @@ impl SierraRunner<Vec<Felt252>> for Runner {
                 return Err(SierraRunnerError::FailedRunning);
             }
         };
-        match result.value {
-            cairo_lang_runner::RunResultValue::Success(values) => Ok(values),
-            cairo_lang_runner::RunResultValue::Panic(values) => {
-                Err(SierraRunnerError::Panicked(values))
-            }
-        }
+        Ok(result)
     }
-    fn run(&self, name: &str, arguments: &[Arg]) -> Result<Vec<Felt252>, SierraRunnerError> {
-        self.run_with_contracts_info(name, arguments, OrderedHashMap::default())
+    fn run(&self, name: &str, arguments: &[Arg]) -> Result<SuccessfulRun, SierraRunnerError> {
+        let result = self.run_with_contracts_info(name, arguments, OrderedHashMap::default())?;
+        match result.value {
+            RunResultValue::Success(values) => Ok(SuccessfulRun {
+                value: values,
+                memory: result.memory,
+            }),
+            RunResultValue::Panic(values) => Err(SierraRunnerError::Panicked(values)),
+        }
     }
 }

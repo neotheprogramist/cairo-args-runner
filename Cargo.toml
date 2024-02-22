@@ -10,7 +10,7 @@ license-file = "LICENSE"
 name = "cairo-args-runner"
 readme = "README.md"
 repository = "https://github.com/neotheprogramist/cairo-args-runner"
-version = "2.0.0"
+version = "2.0.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

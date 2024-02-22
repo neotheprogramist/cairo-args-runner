@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "examples/complex",
+    "examples/fib",
+    "examples/structs",
+    "examples/sum",
+]
+
+[workspace.package]
+edition = "2023_10"
+version = "2.0.0"
+
+[workspace.dependencies]

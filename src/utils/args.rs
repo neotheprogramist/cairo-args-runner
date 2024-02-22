@@ -1,12 +1,15 @@
 use std::{ops::Deref, str::FromStr};
 
 use cairo_felt::Felt252;
+use cairo_lang_runner::Arg;
 use serde::{de::Visitor, Deserialize};
 use serde_json::Value;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum VecFelt252Error {
+pub enum VecArgError {
+    #[error("failed to parse array")]
+    ArrayParseError,
     #[error("failed to parse number: {0}")]
     NumberParseError(#[from] std::num::ParseIntError),
     #[error("failed to parse bigint: {0}")]
@@ -15,67 +18,80 @@ pub enum VecFelt252Error {
     NumberOutOfRange,
 }
 
-/// `VecFelt252` is a wrapper around a vector of `Arg`.
+/// `VecArg` is a wrapper around a vector of `Arg`.
 ///
 /// It provides convenience methods for working with a vector of `Arg` and implements
 /// `Deref` to allow it to be treated like a vector of `Arg`.
-#[derive(Debug, Clone)]
-pub struct VecFelt252(Vec<Felt252>);
+#[derive(Debug)]
+pub struct VecArg(Vec<Arg>);
 
-impl VecFelt252 {
-    /// Creates a new `VecFelt252` from a vector of `Arg`.
+impl VecArg {
+    /// Creates a new `VecArg` from a vector of `Arg`.
     ///
     /// # Arguments
     ///
-    /// * `args` - A vector of `Arg`.
+    /// * `VecArg` - A vector of `Arg`.
     ///
     /// # Returns
     ///
-    /// * `VecFelt252` - A new `VecFelt252` instance.
+    /// * `VecArg` - A new `VecArg` instance.
     #[must_use]
-    pub fn new(args: Vec<Felt252>) -> Self {
+    pub fn new(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }
 
-impl Deref for VecFelt252 {
-    type Target = Vec<Felt252>;
+impl Deref for VecArg {
+    type Target = Vec<Arg>;
     fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
-impl From<VecFelt252> for Vec<Felt252> {
-    fn from(args: VecFelt252) -> Self {
+impl From<VecArg> for Vec<Arg> {
+    fn from(args: VecArg) -> Self {
         args.0
     }
 }
 
-impl From<Vec<Felt252>> for VecFelt252 {
-    fn from(args: Vec<Felt252>) -> Self {
+impl From<Vec<Arg>> for VecArg {
+    fn from(args: Vec<Arg>) -> Self {
         Self(args)
     }
 }
 
-impl VecFelt252 {
-    fn visit_seq_helper(seq: &[Value]) -> Result<Self, VecFelt252Error> {
+impl VecArg {
+    fn visit_seq_helper(seq: &[Value]) -> Result<Self, VecArgError> {
         let iterator = seq.iter();
         let mut args = Vec::new();
 
         for arg in iterator {
             match arg {
                 Value::Number(n) => {
-                    let n = n.as_u64().ok_or(VecFelt252Error::NumberOutOfRange)?;
-                    args.push(Felt252::from(n));
+                    let n = Felt252::from(n.as_u64().ok_or(VecArgError::NumberOutOfRange)?);
+                    args.push(Arg::Value(n));
                 }
                 Value::String(n) => {
-                    let n = num_bigint::BigUint::from_str(n)?;
-                    args.push(Felt252::from_bytes_be(&n.to_bytes_be()));
+                    let n = Felt252::from(num_bigint::BigUint::from_str(n)?);
+                    args.push(Arg::Value(n));
                 }
                 Value::Array(a) => {
-                    args.push(Felt252::from(a.len()));
-                    let result = Self::visit_seq_helper(a)?;
-                    args.extend(result.0);
+                    let mut inner_args = Vec::new();
+                    for x in a {
+                        match x {
+                            Value::Number(n) => {
+                                let n =
+                                    Felt252::from(n.as_u64().ok_or(VecArgError::NumberOutOfRange)?);
+                                inner_args.push(Felt252::new(n));
+                            }
+                            Value::String(n) => {
+                                let n = Felt252::from(num_bigint::BigUint::from_str(n)?);
+                                inner_args.push(Felt252::new(n));
+                            }
+                            _ => return Err(VecArgError::ArrayParseError),
+                        }
+                    }
+                    args.push(Arg::Array(inner_args));
                 }
                 _ => (),
             }
@@ -85,8 +101,8 @@ impl VecFelt252 {
     }
 }
 
-impl<'de> Visitor<'de> for VecFelt252 {
-    type Value = VecFelt252;
+impl<'de> Visitor<'de> for VecArg {
+    type Value = VecArg;
     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter.write_str("a list of arguments")
     }
@@ -108,11 +124,11 @@ impl<'de> Visitor<'de> for VecFelt252 {
     }
 }
 
-impl<'de> Deserialize<'de> for VecFelt252 {
-    fn deserialize<D>(deserializer: D) -> Result<VecFelt252, D::Error>
+impl<'de> Deserialize<'de> for VecArg {
+    fn deserialize<D>(deserializer: D) -> Result<VecArg, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
-        deserializer.deserialize_seq(VecFelt252(Vec::new()))
+        deserializer.deserialize_seq(VecArg(Vec::new()))
     }
 }

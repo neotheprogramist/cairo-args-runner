@@ -1,10 +1,9 @@
 use std::io::{self, Read};
 
-use cairo_lang_runner::Arg;
 use clap::Parser;
 use thiserror::Error;
 
-use cairo_args_runner::{errors::SierraRunnerError, run, VecFelt252};
+use cairo_args_runner::{errors::SierraRunnerError, run, VecArg};
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -33,9 +32,9 @@ fn main() -> Result<(), AppError> {
 
     let target = cli.target;
     let function = cli.function.unwrap_or_else(|| "main".to_string());
-    let args: VecFelt252 = serde_json::from_str(&program_input).unwrap();
+    let args: VecArg = serde_json::from_str(&program_input).unwrap();
 
-    let result = run(&target, &function, &[Arg::Array(args.to_vec())])?;
+    let result = run(&target, &function, &args)?;
 
     println!("{args:?}");
     println!("{result:?}");

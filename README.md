@@ -31,9 +31,7 @@ Run a `main` function from the `complex` package located in `examples/complex`,
 passing `[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]` as the argument:
 
 ```bash
-cd examples/complex/
-scarb build
-echo "[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]" | cargo run --release -- examples/complex/target/dev/complex.sierra.json
+echo "[[1, 2, 4, 8, 16], [1, 2, 3, 4, 5, 6]]" | cargo run --release -- target/dev/complex.sierra.json
 ```
 
 ## Additional Examples
@@ -43,25 +41,19 @@ Here are more examples for running different Cairo programs:
 ### Fibonacci Sequence Example
 
 ```bash
-cd examples/fib/
-scarb build
-echo "[10]" | cargo run --release -- examples/fib/target/dev/fib.sierra.json
+echo "[10]" | cargo run --release -- target/dev/fib.sierra.json
 ```
 
 ### Structs Example
 
 ```bash
-cd examples/structs/
-scarb build
-echo "[1, 2, 10, 5, 9, [1, 2, 3]]" | cargo run --release -- examples/structs/target/dev/structs.sierra.json
+echo "[1, 2, 10, 5, 9, [1, 2, 3]]" | cargo run --release -- target/dev/structs.sierra.json
 ```
 
 ### Summation Example
 
 ```bash
-cd examples/sum/
-scarb build
-echo "[[1, 3, 9, 27]]" | cargo run --release -- examples/sum/target/dev/sum.sierra.json
+echo "[[1, 3, 9, 27]]" | cargo run --release -- target/dev/sum.sierra.json
 ```
 
 These examples demonstrate the versatility and ease of using **Cairo Args Runner** for different types of Cairo 1 programs.

@@ -3,10 +3,8 @@ struct InputData {
     n: felt252,
 }
 
-fn main(x: Array<felt252>) -> felt252 {
-    let mut x_span = x.span();
-    let deserialized_struct: InputData = Serde::deserialize(ref x_span).unwrap();
-    fib(deserialized_struct.n)
+fn main(x: InputData) -> felt252 {
+    fib(x.n)
 }
 
 fn fib(mut n: felt252) -> felt252 {

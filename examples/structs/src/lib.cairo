@@ -14,10 +14,8 @@ struct InputData {
     d: Nested,
 }
 
-fn main(x: Array<felt252>) -> felt252 {
-    let mut x_span = x.span();
-    let deserialized_struct: InputData = Serde::<InputData>::deserialize(ref x_span).unwrap();
-    f(deserialized_struct)
+fn main(x: InputData) -> felt252 {
+    f(x)
 }
 
 fn f(x: InputData) -> felt252 {

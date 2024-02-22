@@ -8,10 +8,8 @@ struct InputData {
     b: Array<felt252>,
 }
 
-fn main(x: Array<felt252>) -> (felt252, felt252, felt252, felt252) {
-    let mut x_span = x.span();
-    let deserialized_struct: InputData = Serde::deserialize(ref x_span).unwrap();
-    complex(deserialized_struct.a, deserialized_struct.b)
+fn main(x: InputData) -> (felt252, felt252, felt252, felt252) {
+    complex(x.a, x.b)
 }
 
 fn complex(a: Array<felt252>, b: Array<felt252>) -> (felt252, felt252, felt252, felt252) {

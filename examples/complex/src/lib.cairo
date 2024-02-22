@@ -1,7 +1,3 @@
-use core::traits::Into;
-use core::array::SpanTrait;
-use core::array::ArrayTrait;
-
 #[derive(Drop, Serde)]
 struct InputData {
     a: Array<felt252>,

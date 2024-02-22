@@ -1,4 +1,3 @@
-use core::array::ArrayTrait;
 #[derive(Drop, Serde)]
 struct Nested {
     a: felt252,

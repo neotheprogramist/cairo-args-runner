@@ -19,11 +19,11 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/complex/target/dev/complex.sierra.json";
+//! let target = "target/dev/complex.sierra.json";
 //! let function = "main";
-//! let args = arg_array![5, 1, 2, 4, 8, 16, 6, 1, 2, 3, 4, 5, 6];
+//! let args = vec![arg_array![1, 2, 4, 8, 16], arg_array![1, 2, 3, 4, 5, 6]];
 //!
-//! let result = run(target, function, &[args]);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), felt_vec![31, 21, 5, 6]);
 //! ```
 //! **Note:** There is a known bug in this example related to passing arrays as arguments.
@@ -33,26 +33,27 @@
 //! ### Fibonacci Sequence
 //! Calculate the 10th number in the Fibonacci sequence:
 //! ```rust
-//! use cairo_args_runner::{arg_array, felt_vec, run};
+//! use cairo_args_runner::{arg_value_vec, felt_vec, run};
 //!
-//! let target = "examples/fib/target/dev/fib.sierra.json";
+//! let target = "target/dev/fib.sierra.json";
 //! let function = "main";
-//! let args = arg_array![10];
+//! let args = arg_value_vec![10];
 //!
-//! let result = run(target, function, &[args]);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), felt_vec![55]);
 //! ```
 //!
 //! ### Working with Structs
 //! Execute a function that works with multiple struct arguments:
 //! ```rust
-//! use cairo_args_runner::{arg_array, felt_vec, run};
+//! use cairo_args_runner::{arg_array, arg_value_vec, felt_vec, run};
 //!
-//! let target = "examples/structs/target/dev/structs.sierra.json";
+//! let target = "target/dev/structs.sierra.json";
 //! let function = "main";
-//! let args = arg_array![1, 2, 10, 5, 9, 3, 1, 2, 3];
+//! let mut args = arg_value_vec![1, 2, 10, 5, 9];
+//! args.push(arg_array![1, 2, 3]);
 //!
-//! let result = run(target, function, &[args]);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), felt_vec![33]);
 //! ```
 //!
@@ -61,11 +62,11 @@
 //! ```rust
 //! use cairo_args_runner::{arg_array, felt_vec, run};
 //!
-//! let target = "examples/sum/target/dev/sum.sierra.json";
+//! let target = "target/dev/sum.sierra.json";
 //! let function = "main";
-//! let args = arg_array![4, 1, 3, 9, 27];
+//! let args = vec![arg_array![1, 3, 9, 27]];
 //!
-//! let result = run(target, function, &[args]);
+//! let result = run(target, function, &args);
 //! assert_eq!(result.unwrap(), felt_vec![40]);
 //! ```
 //!
